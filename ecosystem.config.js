@@ -18,6 +18,7 @@ const os = require('os');
 
 // Automatically check how many CPU cores the machine has
 const totalCores = os.cpus().length;
+console.log("Available Cores: ",totalCores);
 
 module.exports = {
   apps: [
