@@ -16,9 +16,11 @@
 
 const os = require('os');
 
-// Automatically check how many CPU cores the machine has
-const totalCores = os.cpus().length;
-console.log("Available Cores: ",totalCores);
+// 1. Check if Render is forcing a process limit (WEB_CONCURRENCY)
+// 2. If not, fallback to physical CPU cores
+const totalCores = process.env.WEB_CONCURRENCY ? parseInt(process.env.WEB_CONCURRENCY) : os.cpus().length;
+
+console.log("Available Cores (Adjusted): ", totalCores);
 
 module.exports = {
   apps: [
@@ -26,12 +28,10 @@ module.exports = {
       name: 'ecommerse-nest-backend',
       script: './dist/src/main.js',
       
-      // 👇 AUTOMATIC ADJUSTMENT LOGIC
-      // If 1 core (Render Free Tier), use 1 instance. 
-      // If multi-core (Paid Tier), use all available cores ('max')!
+      // If totalCores evaluates to 1, use 1 instance. Otherwise use 'max'
       instances: totalCores === 1 ? 1 : 'max', 
       
-      // Automatically switch to 'cluster' mode only if there are multiple cores
+      // If totalCores evaluates to 1, use 'fork'. Otherwise use 'cluster'
       exec_mode: totalCores === 1 ? 'fork' : 'cluster',
       
       env: {
