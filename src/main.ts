@@ -30,47 +30,20 @@ async function bootstrap() {
   });
 
   //Enable Swagger Docs
-  // const config = new DocumentBuilder()
-  //   .setTitle('API Documentation')
-  //   .setDescription('API Documentation for application')
-  //   .setVersion('1.0')
-  //   .addTag('auth', 'Authentication related endpoints')
-  //   .addBearerAuth(
-  //     {
-  //       type: 'http',
-  //       scheme: 'bearer',
-  //       bearerFormat: 'JWT',
-  //       name: 'JWT',
-  //       description: 'Enter JWT Token',
-  //       in: 'header',
-  //     },
-  //     'JWT-auth',
-  //   )
-  //   .addBearerAuth(
-  //     {
-  //       type: 'http',
-  //       scheme: 'bearer',
-  //       bearerFormat: 'JWT',
-  //       name: 'Refresh-JWT',
-  //       description: 'Enter refresh JWT Token',
-  //       in: 'header',
-  //     },
-  //     'Refresh-JWT-auth',
-  //   )
-  //   .addServer('http://localhost:8080/', 'Development Server')
-  //   .addServer(
-  //     'https://nestjs-ecommerce-app-backend.onrender.com/',
-  //     'Production Server',
-  //   )
-  //   .build();
-
-  const configBuilder = new DocumentBuilder()
+  const config = new DocumentBuilder()
     .setTitle('API Documentation')
     .setDescription('API Documentation for application')
     .setVersion('1.0')
     .addTag('auth', 'Authentication related endpoints')
     .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', name: 'JWT' },
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT Token',
+        in: 'header',
+      },
       'JWT-auth',
     )
     .addBearerAuth(
@@ -79,26 +52,11 @@ async function bootstrap() {
         scheme: 'bearer',
         bearerFormat: 'JWT',
         name: 'Refresh-JWT',
+        description: 'Enter refresh JWT Token',
+        in: 'header',
       },
       'Refresh-JWT-auth',
-    );
-
-  // Agar NODE_ENV production hai toh Render ka URL pehle dikhega, nahi toh localhost
-  if (process.env.NODE_ENV === 'production') {
-    configBuilder.addServer(
-      'https://nestjs-ecommerce-app-backend.onrender.com/',
-      'Production Server',
-    );
-  } else {
-    configBuilder.addServer('http://localhost:8080/', 'Development Server');
-    configBuilder.addServer(
-      'https://nestjs-ecommerce-app-backend.onrender.com/',
-      'Production Server',
-    ); // Optional: Local par dono dekhne ke liye
-  }
-
-  const config = configBuilder.build();
-
+    ).addServer('http://localhost:8080/', 'Development Server').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document, {
     swaggerOptions: {
