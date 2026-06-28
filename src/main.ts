@@ -56,7 +56,14 @@ async function bootstrap() {
         in: 'header',
       },
       'Refresh-JWT-auth',
-    ).addServer('http://localhost:8080/', 'Development Server').build();
+    )
+    .addServer(
+      process.env.RENDER_EXTERNAL_URL ||
+        'https://nestjs-ecommerce-app-backend.onrender.com',
+      'Production Server',
+    )
+    .addServer('http://localhost:8080/', 'Development Server')
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document, {
     swaggerOptions: {
